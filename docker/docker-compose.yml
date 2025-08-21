@@ -13,9 +13,11 @@ services:
       - BPL_DEBUG_ENABLED=true
       - BPL_DEBUG_PORT=8000
       - CATALOG_SERVICE_URL=http://catalog-service:9001
-      - ORDER_SERVICE_URL=http://order-service:9003
       - SPRING_CLOUD_CONFIG_URI=http://config-service:9002
+      - ORDER_SERVICE_URL=http://order-service:9003
+      - SPA_URL=http://polar-ui:9005
       - SPRING_REDIS_HOST=polar-redis
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://host.docker.internal:8080/realms/PolarBookshop
 
   catalog-service:
     depends_on:
@@ -34,6 +36,7 @@ services:
       - SPRING_CLOUD_CONFIG_URI=http://config-service:9002
       - SPRING_DATASOURCE_URL=jdbc:postgresql://polar-postgres:5432/polardb_catalog
       - SPRING_PROFILES_ACTIVE=testdata
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://host.docker.internal:8080/realms/PolarBookshop
 
   config-service:
     image: "config-service"
@@ -64,6 +67,8 @@ services:
       - SPRING_CLOUD_CONFIG_URI=http://config-service:9002
       - SPRING_R2DBC_URL=r2dbc:postgresql://polar-postgres:5432/polardb_order
       - SPRING_FLYWAY_URL=jdbc:postgresql://polar-postgres:5432/polardb_order
+      - SPRING_RABBITMQ_HOST=polar-rabbitmq
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://host.docker.internal:8080/realms/PolarBookshop
 
   dispatcher-service:
     depends_on:
@@ -79,6 +84,14 @@ services:
       - BPL_DEBUG_PORT=8004
       - SPRING_CLOUD_CONFIG_URI=http://config-service:9002
       - SPRING_RABBITMQ_HOST=polar-rabbitmq
+
+  polar-ui:
+    image: "ghcr.io/polarbookshop/polar-ui:v1"
+    container_name: "polar-ui"
+    ports:
+      - 9005:9005
+    environment:
+      - PORT=9005
 
   # Backing Services
   polar-postgres:
@@ -107,3 +120,14 @@ services:
     volumes:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
+  polar-keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: "polar-keycloak"
+    command: start-dev --import-realm
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    environment:
+      - KEYCLOAK_ADMIN=user
+      - KEYCLOAK_ADMIN_PASSWORD=password
+    ports:
+      - 8080:8080
