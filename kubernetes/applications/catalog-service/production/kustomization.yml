@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- github.com/cesar-alejandro-perez/catalog-service/k8s?ref=b712eb76bfde7413dd919d94e139e7c2ec110965
+
+patches:
+- path: patch-env.yml
+- path: patch-resources.yml
+- path: patch-volumes.yml
+
+configMapGenerator:
+- behavior: merge
+  files:
+  - application-prod.yml
+  name: catalog-config
+
+images:
+- name: catalog-service
+  newName: ghcr.io/cesar-alejandro-perez/catalog-service
+  newTag: b712eb76bfde7413dd919d94e139e7c2ec110965
+
+replicas:
+- count: 2
+  name: catalog-service
