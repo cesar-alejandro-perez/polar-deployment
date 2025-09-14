@@ -4,10 +4,10 @@ kind: Kustomization
 resources:
   - github.com/polarbookshop/dispatcher-service/k8s?ref=main
 
-patchesStrategicMerge:
-  - patch-env.yml
-  - patch-resources.yml
-  - patch-volumes.yml
+patches:
+  - path: patch-env.yml
+  - path: patch-resources.yml
+  - path: patch-volumes.yml
 
 configMapGenerator:
   - behavior: merge
