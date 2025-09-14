@@ -18,7 +18,7 @@ configMapGenerator:
 images:
 - name: catalog-service
   newName: ghcr.io/cesar-alejandro-perez/catalog-service
-  newTag: b712eb76bfde7413dd919d94e139e7c2ec110965
+  newTag: 2af2cdd11c4546d2b13526318864dcb3e9245b2c
 
 replicas:
 - count: 2
