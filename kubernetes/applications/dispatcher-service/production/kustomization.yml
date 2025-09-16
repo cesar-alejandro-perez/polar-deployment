@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- github.com/cesar-alejandro-perez/dispatcher-service/k8s?ref=32e1559a4a2beacbe3db84e3dcbdb126575e70c9
+- github.com/cesar-alejandro-perez/dispatcher-service/k8s?ref=a66d11439a05ac39529c3053d251bfc2d81490a9
 
 patches:
 - path: patch-env.yml
@@ -18,7 +18,7 @@ configMapGenerator:
 images:
 - name: dispatcher-service
   newName: ghcr.io/cesar-alejandro-perez/dispatcher-service
-  newTag: 32e1559a4a2beacbe3db84e3dcbdb126575e70c9
+  newTag: a66d11439a05ac39529c3053d251bfc2d81490a9
 
 replicas:
 - count: 1
