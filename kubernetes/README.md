@@ -38,6 +38,16 @@ To visualize the sequence of events use this command on a separate Terminal wind
 kubectl get pods -l app=catalog-service --watch
 ```
 
+List of all the contexts available:
+```
+kubectl config get-contexts
+```
+
+Change the context:
+```
+kubectl config use-context <context-name>
+```
+
 # Digital Ocean
 Use the API token to grant doctl access to your DigitalOcean account. 
 Pass in the token string when prompted by doctl auth init, and give this authentication context a name.
@@ -81,29 +91,30 @@ doctl databases create polar-db \
     --region sfo3 \
     --version 14
 ```
-**Custer ID: 7297a476-0810-4038-9528-21fc07ad96f5**
+**Custer ID: 574446cc-d22f-46e5-b63b-63dcf1bd5461**
 
 Databases list:
 ```
 doctl databases list
 ```
-**Database ID: 64bf043f-93cd-42dd-bd99-9b159b911edc**
+**Database ID: d18651d8-3bba-4695-b0b3-33c13d69241f**
 
 Configure the firewall and secure access to the database server:
 ```
-doctl databases firewalls append 64bf043f-93cd-42dd-bd99-9b159b911edc --rule k8s:7297a476-0810-4038-9528-21fc07ad96f5
+doctl databases firewalls append d18651d8-3bba-4695-b0b3-33c13d69241f --rule k8s:574446cc-d22f-46e5-b63b-63dcf1bd5461
 ```
 
 Create two databases to be used by Catalog Service (polardb_catalog) and Order Service (polardb_order):
 ```
-doctl databases db create 64bf043f-93cd-42dd-bd99-9b159b911edc polardb_catalog
+doctl databases db create d18651d8-3bba-4695-b0b3-33c13d69241f polardb_catalog
 
-doctl databases db create 64bf043f-93cd-42dd-bd99-9b159b911edc polardb_order
+doctl databases db create d18651d8-3bba-4695-b0b3-33c13d69241f polardb_order
 ```
 
 Retrieve the details for connecting to PostgreSQL:
 ```
-doctl databases connection 64bf043f-93cd-42dd-bd99-9b159b911edc --format Host,Port,User,Password
+doctl databases connection d18651d8-3bba-4695-b0b3-33c13d69241f --format Host,Port,User,Password
+
 ```
 
 Create some Secrets in the Kubernetes cluster with the PostgreSQL credentials:
@@ -132,7 +143,7 @@ doctl databases create polar-redis --engine redis --region sfo3 --version 7
 
 Configure a firewall so that the Redis server is only accessible from the Kubernetes cluster:
 ```
-doctl databases firewalls append d12bc696-f971-4d77-aefa-c73ff79f4f43 --rule k8s:7297a476-0810-4038-9528-21fc07ad96f5
+doctl databases firewalls append d12bc696-f971-4d77-aefa-c73ff79f4f43 --rule k8s:574446cc-d22f-46e5-b63b-63dcf1bd5461
 ```
 
 Retrieve the details for connecting to Redis:
